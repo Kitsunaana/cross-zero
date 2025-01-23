@@ -1,0 +1,7 @@
+.page {
+	@apply gap-6 relative w-full h-screen flex flex-col justify-center items-center;
+}
+
+.sidebarBtn {
+	@apply absolute bottom-6 left-6;
+}

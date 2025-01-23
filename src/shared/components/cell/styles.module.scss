@@ -1,0 +1,9 @@
+.cell {
+	@apply relative w-32 h-32 rounded-2xl text-white font-bold text-5xl
+	flex items-center justify-center bg-bg-secondary;
+
+	&:before {
+		@apply text-[24px] font-bold text-bg absolute right-3 top-3;
+		//content: var(--cellId);
+	}
+}
