@@ -10,3 +10,12 @@ Array.prototype.replace = function (index, item) {
 
   return [...first, item, ...second]
 }
+
+export const create2DArray = (size) => {
+  return Array
+    .from({ length: size }, (_, i) => i)
+    .map((row) => Array.from({ length: size }, (_, column) => ({
+      id: `${row}-${column}`,
+      player: null
+    })))
+}

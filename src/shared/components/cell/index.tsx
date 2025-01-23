@@ -3,6 +3,7 @@ import type {ICell} from "@/shared/interfaces";
 
 import styles from "./styles.module.scss";
 import {makeClassname} from "@/shared/utils";
+import {Circle, Cross} from "@/shared/components";
 
 interface ICellComponentProps extends Omit<ComponentPropsWithoutRef<'button'>, 'onClick'> {
 	cell: ICell
@@ -14,9 +15,14 @@ const CellComponent: FC<ICellComponentProps> = ({className, cell, onClick, ...pr
 	const handleClick = () => onClick && onClick(cell)
 
 	return (
-		<button style={{ '--cellId': `"${id}"` } as CSSProperties}
-			onClick={handleClick} className={makeClassname(styles.cell, className)} {...props}>
-			{player}
+		<button
+			style={{ '--cellId': `"${id}"` } as CSSProperties}
+			onClick={handleClick}
+			className={makeClassname(styles.cell, className)}
+			{...props}
+		>
+			{player === "O" && <Circle />}
+			{player === "X" && <Cross />}
 		</button>
 	)
 }

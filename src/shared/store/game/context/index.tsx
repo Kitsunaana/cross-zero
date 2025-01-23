@@ -1,17 +1,9 @@
 import { createContext, useContext } from 'react'
 import {IGameContext} from "@/shared/store";
-
-const createBoard = (size) => {
-  return Array
-    .from({ length: size }, (_, i) => i)
-    .map((row) => Array.from({ length: size }, (_, column) => ({
-      id: `${row}-${column}`,
-      player: null
-    })))
-}
+import {create2DArray} from "@/shared/utils";
 
 const DEFAULT_VALUES: IGameContext = {
-  board: createBoard(3),
+  board: create2DArray(4),
   setBoard: () => {},
   currentPlayer: 'X',
   setCurrentPlayer: () => {},

@@ -1,6 +1,4 @@
-import styles from "./styles.module.scss";
 import {FC, HTMLAttributes} from "react";
-import {makeClassname} from "@/shared/utils";
 import {CellComponent} from "@/shared/components";
 import {useGameContext} from "@/shared/store";
 import {useCellUseCase} from "@/entities/cell";
@@ -14,15 +12,27 @@ const BoardWidget: FC<IBoardWidgetProps> = ({className, ...props}) => {
 	useBoardUseCase()
 
 	return (
-		<div className={makeClassname(styles.gameBoard, className)} {...props}>
-			{board.map((row) => (
-				row.map((column) => (
-					<CellComponent
-						cell={column}
-						key={column.id}
-						onClick={handleCellClick}
-					/>
-				))
+		<div
+			style={{
+				display: "flex",
+				flexDirection: "column",
+				gap: 8,
+			}}
+			{...props}
+		>
+			{board.map((row, index) => (
+				<div key={index} style={{
+					display: "flex",
+					gap: 8,
+				}}>
+					{row.map((column) => (
+						<CellComponent
+							cell={column}
+							key={column.id}
+							onClick={handleCellClick}
+						/>
+					))}
+				</div>
 			))}
 		</div>
 	);

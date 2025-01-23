@@ -1,0 +1,16 @@
+.circle {
+	fill: transparent;
+	stroke: orange;
+	stroke-width: 5;
+	stroke-dasharray: 565;
+	stroke-dashoffset: 565;
+	animation: fill-animation .9s linear forwards;
+	transform: rotate(-90deg);
+	transform-origin: center;
+}
+
+@keyframes fill-animation {
+	to {
+		stroke-dashoffset: 0;
+	}
+}
