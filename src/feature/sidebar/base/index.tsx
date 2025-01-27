@@ -1,12 +1,12 @@
-import type {HTMLAttributes, ReactNode} from 'react'
+import type { HTMLAttributes, ReactNode } from 'react';
 
-import {useEffect, useMemo} from 'react'
-import {X as CLoseIcon} from 'lucide-react';
-import {useOpenBlock} from "@/shared/hooks";
-import {makeClassname} from "@/shared/utils";
+import { useOpenBlock } from "@/shared/hooks";
+import { makeClassname } from "@/shared/utils";
+import { X as CLoseIcon } from 'lucide-react';
+import { useEffect, useMemo } from 'react';
 
-import styles from './style.module.scss'
-import {Button} from "@/shared/components/button";
+import { Button } from "@/shared/components/button";
+import styles from './style.module.scss';
 
 const sidebarRootElement = document.getElementById('sidebar')
 

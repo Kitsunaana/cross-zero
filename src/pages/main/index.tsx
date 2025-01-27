@@ -1,34 +1,18 @@
-import {ReactNode} from "react";
 import BoardWidget from "@/widget/board";
-import styles from './styles.module.scss'
-import {useGameContext} from "@/shared/store";
 import TaskDescription from "@/widget/task";
-import {create2DArray} from "@/shared/utils";
+import styles from './styles.module.scss';
+import { BannerWin } from "./ui/banner-win";
+import { CounterStep } from "./ui/counter-step";
 
-export const useStartGame = () => {
-	const game = useGameContext()
-
-	return () => {
-		game.setBoard(create2DArray(4))
-		game.setCurrentPlayer("X")
-		game.setWinner(null)
-	}
-}
-
-const MainPage = (): ReactNode => {
-	const {winner} = useGameContext()
-	const startGame = useStartGame()
-
+const MainPage = () => {
 	return (
 		<main className={styles.page}>
-			{!!winner && <h1 className="text-4xl">Игрок {winner} победил!</h1>}
-
+			<BannerWin />
 			<BoardWidget/>
+			<CounterStep />
 
 			{/* Описание задания */}
 			<TaskDescription/>
-
-			<button onClick={startGame}>Играть снова</button>
 		</main>
 	);
 };

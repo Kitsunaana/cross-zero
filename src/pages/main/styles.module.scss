@@ -5,3 +5,7 @@
 .sidebarBtn {
 	@apply absolute bottom-6 left-6;
 }
+
+.counterStep {
+	@apply absolute bottom-8 flex gap-10 items-center
+}

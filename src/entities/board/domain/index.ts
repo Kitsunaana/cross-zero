@@ -1,13 +1,11 @@
-import {IBoard, IInfoCell, IPlayer} from "@/shared/interfaces";
+import { IBoard, ICell, IInfoCell, IPlayer } from "@/shared/interfaces";
+import { NUMBER_TO_WIN } from "@/shared/store";
 
 // ---------------------------------------------------------------------------
 // --------- [ const ] -------------------------------------------------------
-export const NUMBER_TO_WIN = 5
 export const PLAYERS: IPlayer[] = ["X", "O"]
 
-const getWinCombinations = (players: IPlayer[]) => (
-  players.map((player) => player.repeat(NUMBER_TO_WIN))
-)
+const getWinCombinations = (players: IPlayer[]) => players.map((player) => player.repeat(NUMBER_TO_WIN))
 
 const winCombinations = getWinCombinations(PLAYERS)
 
@@ -15,6 +13,16 @@ const winCombinations = getWinCombinations(PLAYERS)
 
 // ---------------------------------------------------------------------------
 // --------- [ core ] --------------------------------------------------------
+export const getAllEnemy = (player: IPlayer) => PLAYERS.filter((variant) => variant !== player)
+
+export const getAvailableCells = (board: IBoard) => {
+  return board.reduce((result, row) => {
+    row.forEach((cell) => (cell.player === null) && result.push(cell))
+
+    return result
+  }, [] as ICell[])
+}
+
 export const getDiagonal = (
   board: IBoard,
   row: number,
@@ -25,7 +33,7 @@ export const getDiagonal = (
     .map((_, index) => ({
       row: row + index,
       column: column + index * order,
-      cell: board[row + index]?.[ column + index * order ],
+      cell: board[row + index]?.[column + index * order],
     }))
     .filter((position): position is IInfoCell => position.cell !== undefined)
 )
@@ -50,6 +58,8 @@ export const getHorizontal = (board: IBoard, row: number): IInfoCell[] => (
 
 // ---------------------------------------------------------------------------
 // --------- [ solution ] ----------------------------------------------------
+export const isDraw = (board: IBoard) => getAvailableCells(board).empty()
+
 export const checkCandidateWinner = (cells: IInfoCell[]) => {
   if (cells.length < NUMBER_TO_WIN) return null
 

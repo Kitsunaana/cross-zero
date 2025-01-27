@@ -1,0 +1,18 @@
+.cross {
+	stroke: cornflowerblue;
+	stroke-width: 5;
+	stroke-dasharray: 200;
+	stroke-dashoffset: 200;
+	animation: draw .9s linear forwards;
+}
+
+.win {
+	stroke: darkred;
+	stroke-width: 10px;
+}
+
+@keyframes draw {
+	to {
+		stroke-dashoffset: 0;
+	}
+}

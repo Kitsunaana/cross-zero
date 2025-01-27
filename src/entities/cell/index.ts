@@ -1,36 +1,31 @@
-import {useGameContext} from "@/shared/store";
-import {ICell} from "@/shared/interfaces";
-import { getPosition } from "./domain"
+import { ICell } from "@/shared/interfaces";
+import { useGameContext } from "@/shared/store";
+import { findCellById, insertCellInBoard } from "./domain";
 
 const useCellUseCase = () => {
 	const game = useGameContext()
 
 	const handleCellClick = (cell: ICell): void => {
-		if (game.winner !== null) return
+		const cellOccupied = cell.player !== null
+		const gameIsNotFinished = game.winner.win !== null
 
-		const cellPosition = getPosition(cell.id)
+		if (cellOccupied || gameIsNotFinished) return
 
 		const player = game.currentPlayer === "X" ? "O" : "X"
 
 		game.setCurrentPlayer(player)
+		game.setBoard((prevBoard) => insertCellInBoard(prevBoard, cell, player))
 
-		game.setBoard((prevBoard) => {
-			const findRow = prevBoard[cellPosition.row]
-
-			const replacedEmptyCellToPlayer = findRow.replace(cellPosition.column, {
-				id: cell.id,
-				player
-			})
-
-			return prevBoard.replace(cellPosition.row, replacedEmptyCellToPlayer)
-		})
+		game.setCounterStep((prev) => prev += 1)
 	}
 
 	return {
-		handleCellClick
+		handleCellClick,
 	}
 }
 
 export {
-	useCellUseCase,
-}
+	findCellById,
+	useCellUseCase
+};
+

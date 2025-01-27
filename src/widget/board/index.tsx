@@ -1,35 +1,48 @@
-import {FC, HTMLAttributes} from "react";
-import {CellComponent} from "@/shared/components";
-import {useGameContext} from "@/shared/store";
-import {useCellUseCase} from "@/entities/cell";
-import {useBoardUseCase} from "@/entities/board";
+import { useBoardUseCase } from "@/entities/board";
+import { findCellById, useCellUseCase } from "@/entities/cell";
+import { CellComponent } from "@/shared/components";
+import { useGameContext } from "@/shared/store";
+import { makeClassname } from "@/shared/utils";
+import { FC, HTMLAttributes } from "react";
+import styles from "./styles.module.scss";
+import { Circle } from "./ui/circle";
+import { Cross } from "./ui/cross";
 
 type IBoardWidgetProps = HTMLAttributes<HTMLDivElement>;
 
-const BoardWidget: FC<IBoardWidgetProps> = ({className, ...props}) => {
-	const {board} = useGameContext()
-	const { handleCellClick } = useCellUseCase()
-	useBoardUseCase()
+const BoardWidget: FC<IBoardWidgetProps> = ({ className, ...props }) => {
+	const game = useGameContext()
+	const cellUseCase = useCellUseCase()
+
+	useBoardUseCase(cellUseCase.handleCellClick)
 
 	return (
 		<div
-			style={{
-				display: "flex",
-				flexDirection: "column",
-				gap: 8,
-			}}
+      className={makeClassname(
+        className,
+        styles.rootContainer,
+        game.winner.win && styles.gameOver
+      )}
 			{...props}
 		>
-			{board.map((row, index) => (
-				<div key={index} style={{
-					display: "flex",
-					gap: 8,
-				}}>
+			{game.board.map((row, index) => (
+				<div
+          key={index}
+          className={styles.rowContainer}
+        >
 					{row.map((column) => (
 						<CellComponent
+              key={column.id}
 							cell={column}
-							key={column.id}
-							onClick={handleCellClick}
+							onClick={cellUseCase.handleCellClick}
+              renderIcon={(player, id) => {
+                const cellIsExistInWin = Boolean(findCellById(game.winner.cells, id))
+
+                if (player === "X") return <Cross stroke={cellIsExistInWin} />
+                if (player === "O") return <Circle stroke={cellIsExistInWin} />
+
+                return null
+              }}
 						/>
 					))}
 				</div>
@@ -37,5 +50,10 @@ const BoardWidget: FC<IBoardWidgetProps> = ({className, ...props}) => {
 		</div>
 	);
 };
+
+export {
+	Circle,
+	Cross,
+}
 
 export default BoardWidget

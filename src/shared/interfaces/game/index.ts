@@ -1,15 +1,26 @@
+type IPlayer = 'X' | 'O'
+type IWinner = IPlayer | null | "none"
+
 interface ICell {
-	id: string
-	player: IWinner
+  id: string
+  player: IWinner
 }
 
-type IPlayer = 'X' | 'O'
-type IWinner = IPlayer | null
+interface IInfoCell {
+  row: number
+  column: number
+  cell: ICell
+}
+
+interface IWinnerInfo {
+  win: IWinner,
+  cells: Array<IInfoCell>
+}
+
 type IBoard = Array<ICell[]>
 
 export type {
-	ICell,
-	IPlayer,
-	IWinner,
-	IBoard
+  IBoard, ICell, IInfoCell, IPlayer,
+  IWinner, IWinnerInfo
 }
+

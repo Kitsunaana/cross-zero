@@ -9,6 +9,11 @@
 	transform-origin: center;
 }
 
+.win {
+	stroke: darkred;
+	stroke-width: 10px;
+}
+
 @keyframes fill-animation {
 	to {
 		stroke-dashoffset: 0;

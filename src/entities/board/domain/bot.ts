@@ -1,10 +1,10 @@
-import {IBoard, IInfoCell, IPlayer} from "@/shared/interfaces";
+import { IBoard, IInfoCell, IPlayer } from "@/shared/interfaces";
+import { NUMBER_TO_WIN } from "@/shared/store/index.ts";
 import {
-  NUMBER_TO_WIN,
   getDiagonal,
   getHorizontal,
   getVertical,
-} from "./index.ts"
+} from "./index.ts";
 
 // ---------------------------------------------------------------------------
 // --------- [ types ] -------------------------------------------------------
@@ -63,7 +63,7 @@ const iterateAcrossBoard = <T>(params: IIterateAcrossBoardParams<T>) => (
         callback(rowIndex).then(resolve)
       ))
 
-      row.forEach((column, columnIndex) => (
+      row.forEach((_, columnIndex) => (
         params.columnIterate.forEach((callback) => (
           callback(rowIndex, columnIndex).then(resolve)
         ))
@@ -102,7 +102,7 @@ const cleanCellsCombinations = <T extends Record<number, IInfoCell[]>>(record: T
   Object
     .entries(record)
     .reduce((result, [key, value]) => {
-      result[key] = getUniqueCells(value)
+      result[key as unknown as number] = getUniqueCells(value)
       return result
     }, {} as T)
 )
@@ -110,7 +110,7 @@ const cleanCellsCombinations = <T extends Record<number, IInfoCell[]>>(record: T
 const getCandidateWinCells = (cells: IInfoCell[], bot: IPlayer): Array<IInfoCell[]> => {
   if (cells.length < NUMBER_TO_WIN) return []
 
-  return cells.reduce((result, cell, index, array) => {
+  return cells.reduce<IInfoCell[][]>((result, _, index, array) => {
     const candidateToWin = array.slice(index, index + NUMBER_TO_WIN)
 
     if (candidateToWin.length === NUMBER_TO_WIN && isNoEnemyInCells(candidateToWin, bot)) {
@@ -123,12 +123,12 @@ const getCandidateWinCells = (cells: IInfoCell[], bot: IPlayer): Array<IInfoCell
 
 const unionCombinations = (first: IInfoCell[], second: IInfoCell[]) => {
   const greatestLengthCells = first.length > second.length ? first : second
-  const shortestLengthCells =  first.length > second.length ? second : first
+  const shortestLengthCells = first.length > second.length ? second : first
 
   return shortestLengthCells.reduce<IInfoCell[]>((result, info) => {
     const isExist = greatestLengthCells.some(({ cell }) => cell.id === info.cell.id)
 
-    if (isExist) return result.concat([ info ])
+    if (isExist) return result.concat([info])
 
     return result
   }, [])
@@ -149,6 +149,17 @@ const groupingByNumberOfMatches = (combinationsCells: IInfoCell[][], player: IPl
   }, getBaseGroupCombinations())
 )
 
+const getMostWeight = (bestMoves: Record<number, IInfoCell[]>) => {
+  const sortedWeights = Object
+    .keys(bestMoves)
+    .map(Number)
+    .sort((a, b) => a > b ? 1 : -1)
+
+  const findIndex = sortedWeights.findIndex((key) => bestMoves[key].length)
+  const weight = sortedWeights[findIndex]
+
+  return weight
+}
 
 
 // ---------------------------------------------------------------------------
@@ -189,6 +200,7 @@ export const runMoveBot = (board: IBoard, bot: IPlayer) => {
   const bestMovesOpponent = cleanCellsCombinations(getBestMoveCell(board, "O"))
   const bestMovesBot = cleanCellsCombinations(getBestMoveCell(board, bot))
 
+  // TODO
   const uniqueMoveCellsBot = getUniqueCells([
     ...(bestMovesBot["4"] ?? []),
     ...(bestMovesBot["3"] ?? []),
@@ -199,21 +211,14 @@ export const runMoveBot = (board: IBoard, bot: IPlayer) => {
   if (bestMovesBot["1"].length) return bestMovesBot["1"][0]
   if (bestMovesOpponent["1"].length) return bestMovesOpponent["1"][0]
 
-  const sortedWeights = Object
-    .keys(bestMovesOpponent)
-    .map(Number)
-    .sort((a, b) => a > b ? 1 : -1)
-
-  const findIndex = sortedWeights.findIndex((key) => bestMovesOpponent[key].length)
-  const weight = sortedWeights[findIndex]
-
+  const weight = getMostWeight(bestMovesOpponent)
   if (!weight) return null
 
   const merge = unionCombinations(bestMovesOpponent[weight], uniqueMoveCellsBot)
 
   return (
-    merge[0] ??
+    merge?.[0] ??
     bestMovesOpponent[weight]?.[0] ??
-    uniqueMoveCellsBot[sortedWeights.length - 1]?.[0]
+    uniqueMoveCellsBot?.[0]
   )
 }

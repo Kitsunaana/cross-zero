@@ -1,6 +1,6 @@
-import {ComponentPropsWithoutRef, FC} from "react";
-import {makeClassname} from "@/shared/utils";
-import styles from './style.module.scss'
+import { makeClassname } from "@/shared/utils";
+import { ComponentPropsWithoutRef, FC } from "react";
+import styles from './style.module.scss';
 
 type IButtonProps = ComponentPropsWithoutRef<'button'>
 
@@ -9,5 +9,5 @@ const Button: FC<IButtonProps> = ({className, ...props}) => (
 )
 
 export {
-	Button
+  Button
 };

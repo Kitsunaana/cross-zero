@@ -1,5 +1,5 @@
 import { makeClassname } from "@/shared/utils";
-import {ComponentPropsWithoutRef, FC, ReactNode} from "react";
+import { ComponentPropsWithoutRef, FC, ReactNode } from "react";
 
 interface ITextAccentProps extends Omit<ComponentPropsWithoutRef<'span'>, 'children'> {
 	text: ReactNode;
@@ -12,5 +12,5 @@ const TextAccent: FC<ITextAccentProps> = ({className, text, ...props}) => (
 )
 
 export {
-	TextAccent
+  TextAccent
 };

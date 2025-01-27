@@ -1,4 +1,15 @@
 .gameBoard {
-	//@apply w-fit gap-2 grid grid-cols-3 grid-rows-3;
 	@apply w-fit gap-2 grid;
+}
+
+.rootContainer {
+	@apply flex flex-col transition duration-300 gap-2
+}
+
+.gameOver {
+	@apply blur-sm scale-75
+}
+
+.rowContainer {
+	@apply flex gap-2
 }

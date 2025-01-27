@@ -1,32 +1,31 @@
-import type {ComponentPropsWithoutRef, CSSProperties, FC} from "react";
-import type {ICell} from "@/shared/interfaces";
-
+import type { ICell, IWinner } from "@/shared/interfaces";
+import { makeClassname } from "@/shared/utils";
+import type { ComponentPropsWithoutRef, CSSProperties, FC, ReactNode } from "react";
 import styles from "./styles.module.scss";
-import {makeClassname} from "@/shared/utils";
-import {Circle, Cross} from "@/shared/components";
 
 interface ICellComponentProps extends Omit<ComponentPropsWithoutRef<'button'>, 'onClick'> {
 	cell: ICell
-	onClick?(cell: ICell): void
+	onClick?: (cell: ICell) => void
+	renderIcon: (player: IWinner, id: string) => ReactNode
 }
 
-const CellComponent: FC<ICellComponentProps> = ({className, cell, onClick, ...props}) => {
-	const {player, id} = cell
+export const CellComponent: FC<ICellComponentProps> = ({
+	className,
+	cell,
+	renderIcon,
+	onClick,
+	...props
+}) => {
 	const handleClick = () => onClick && onClick(cell)
 
 	return (
 		<button
-			style={{ '--cellId': `"${id}"` } as CSSProperties}
-			onClick={handleClick}
+			style={{ '--cellId': `"${cell.id}"` } as CSSProperties}
 			className={makeClassname(styles.cell, className)}
+			onClick={handleClick}
 			{...props}
 		>
-			{player === "O" && <Circle />}
-			{player === "X" && <Cross />}
+			{renderIcon(cell.player, cell.id)}
 		</button>
 	)
 }
-
-export {
-	CellComponent
-};

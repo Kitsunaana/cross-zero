@@ -1,9 +1,8 @@
-import {FC, type PropsWithChildren, useState} from 'react'
+import type { IBoard, IPlayer, IWinnerInfo } from "@/shared/interfaces"
+import { FC, type PropsWithChildren, useState } from 'react'
+import { DEFAULT_VALUES, GameContext } from '../context'
 
-import {DEFAULT_VALUES, GameContext} from '../context'
-import type {IBoard, IPlayer, IWinner} from "@/shared/interfaces";
-
-const GameProvider: FC<PropsWithChildren> = ({children}) => {
+const GameProvider: FC<PropsWithChildren> = ({ children }) => {
 	const {
 		board: defaultBoard,
 		currentPlayer: defaultCurrentPlayer,
@@ -12,12 +11,26 @@ const GameProvider: FC<PropsWithChildren> = ({children}) => {
 
 	const [board, setBoard] = useState<IBoard>(defaultBoard);
 	const [currentPlayer, setCurrentPlayer] = useState<IPlayer>(defaultCurrentPlayer);
-	const [winner, setWinner] = useState<IWinner>(defaultWinner);
+	const [winner, setWinner] = useState<IWinnerInfo>(defaultWinner);
+  const [counterStep, setCounterStep] = useState(0)
+
+	const restart = () => {
+		setBoard(defaultBoard)
+		setCurrentPlayer(defaultCurrentPlayer)
+		setWinner(defaultWinner)
+		setCounterStep(0)
+	}
 
 	const context = {
-		board, setBoard,
-		currentPlayer, setCurrentPlayer,
-		winner, setWinner
+		board,
+    setBoard,
+		currentPlayer,
+    setCurrentPlayer,
+		winner,
+    setWinner,
+    counterStep,
+    setCounterStep,
+		restart
 	}
 
 	return (
@@ -27,4 +40,4 @@ const GameProvider: FC<PropsWithChildren> = ({children}) => {
 	)
 }
 
-export {GameProvider}
+export { GameProvider }
